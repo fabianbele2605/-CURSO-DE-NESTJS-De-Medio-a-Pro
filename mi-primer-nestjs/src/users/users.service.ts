@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
+import * as bcrypt from 'bcrypt';
 
 
 @Injectable()
@@ -23,9 +24,18 @@ findOne(id: number) {
 }
 
 // metodo Crear un usuario
-createUser(user: any) {
-    const newUser = this.userRepository.create(user);
+async createUser(user: any) {
+    const hashedPassword = await bcrypt.hash(user.password, 10);
+    const newUser = this.userRepository.create({
+        ...user,
+        password: hashedPassword
+    })
     return this.userRepository.save(newUser);
+}
+
+// Nuevo metodo
+findByEmail(email: string) {
+    return this.userRepository.findOne({ where: { email }})
 }
 }
 
