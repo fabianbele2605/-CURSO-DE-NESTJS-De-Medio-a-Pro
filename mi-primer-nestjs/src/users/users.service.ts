@@ -1,45 +1,31 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { User } from './entities/user.entity';
+
 
 @Injectable()
 export class UsersService {
-    private users = [
-        {
-        id: 1,
-        name: 'Alex duran',
-        email: 'alex123@mail.com',
-        age: 25
-    },
-    {
-        id: 2,
-        name: 'Maria perez',
-        email: 'maria123@mail.com',
-        age: 20
-    },
-    {
-        id: 3,
-        name: 'David martinez',
-        email: 'david123@mail.com',
-        age: 45
-    }
-]
+    constructor (
+        @InjectRepository(User) 
+        private userRepository: Repository<User>
+    ) {}
+        
+
 // metedoo para obtener todos los usuarios
 findAll() {
-    return this.users;
+    return this.userRepository.find();
 }
 
 // metodo obtener usurios por ID
 findOne(id: number) {
-    return this.users.find(user => user.id === id);
+    return this.userRepository.findOne({ where: { id }});
 }
 
 // metodo Crear un usuario
 createUser(user: any) {
-    const newUser = {
-        id: this.users.length +1, // genera ID
-        ...user // agrega los datos del usuario
-    };
-    this.users.push(newUser);
-    return newUser;
+    const newUser = this.userRepository.create(user);
+    return this.userRepository.save(newUser);
 }
 }
 
