@@ -5,6 +5,7 @@ import { UsersModule } from './users/users.module';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
+import { PostsModule } from './posts/posts.module';
 
 
 
@@ -24,7 +25,9 @@ import { AuthModule } from './auth/auth.module';
       synchronize: true // Crea/actualiza las tablas automaticamente (solo dev)
     }),
     UsersModule,
-    AuthModule],
+    AuthModule,
+    PostsModule,
+    ],
   controllers: [AppController],
   providers: [AppService],
 })
