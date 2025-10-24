@@ -2,6 +2,8 @@ import { Body, Controller, Post, UseGuards, Request, Get, Param } from '@nestjs/
 import { AuthGuard } from '@nestjs/passport';
 import { PostsService } from './posts.service';
 import { CreatePostDto } from './dto/create-post.dto';
+import { GetUser } from 'src/common/get-user.decorator';
+import { ParsePositiveIntPipe } from 'src/common/pipes/parse-positive-int.pipe';
 
 
 @Controller('posts')
@@ -10,8 +12,8 @@ export class PostsController {
 
     @Post()
     @UseGuards(AuthGuard('jwt'))
-    create(@Body() createPostDto: CreatePostDto, @Request() req) {
-        return this.postsService.create(createPostDto, req.user.id);
+    create(@Body() createPostDto: CreatePostDto, @GetUser('id') userId: number) {
+        return this.postsService.create(createPostDto, userId);
     }
 
     @Get()
@@ -20,12 +22,12 @@ export class PostsController {
     }
 
     @Get(':id')
-    findOne(@Param('id') id: string) {
-        return this.postsService.findOne(+id);
+    findOne(@Param('id', ParsePositiveIntPipe) id: number) {
+        return this.postsService.findOne(id);
     }
 
     @Get('author/:authorId')
-    findByAuthor(@Param('authorId') authorId: string) {
-        return this.postsService.findByAuthor(+authorId);
+    findByAuthor(@Param('authorId', ParsePositiveIntPipe) authorId: number) {
+        return this.postsService.findByAuthor(authorId);
     }
 }
