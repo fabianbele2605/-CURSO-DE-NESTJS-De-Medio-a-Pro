@@ -1,0 +1,34 @@
+# Dependencias de Node.js
+node_modules
+npm-debug.log
+
+# Build outputs
+dist
+build
+
+# Environment variables
+.env
+.env.local
+.env.production
+
+# Git
+.git
+.gitignore
+
+# IDE
+.vscode
+.idea
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
+
+# Logs
+logs
+*.log
+
+# Coverage
+coverage
+
+# Testing
+test-results
