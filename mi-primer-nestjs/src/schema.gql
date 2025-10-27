@@ -1,0 +1,49 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type UserType {
+  id: ID!
+  username: String!
+  email: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type PostType {
+  id: ID!
+  title: String!
+  content: String!
+  author: UserType!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type Query {
+  users: [UserType!]!
+  user(id: ID!): UserType
+  me: UserType!
+  posts: [PostType!]!
+  post(id: ID!): PostType
+}
+
+type Mutation {
+  createUser(createUserInput: CreateUserInput!): UserType!
+  createPost(createPostInput: CreatePostInput!): PostType!
+}
+
+input CreateUserInput {
+  email: String!
+  password: String!
+  name: String!
+}
+
+input CreatePostInput {
+  title: String!
+  content: String!
+}

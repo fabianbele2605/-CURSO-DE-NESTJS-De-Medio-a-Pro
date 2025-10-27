@@ -14,6 +14,22 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
 // Módulo de posts con toda su funcionalidad
 import { PostsModule } from './posts/posts.module';
+// Modulo de gestión de archivos
+import { FilesModule } from './files/files.module';
+// Módulo de chat con WebSocket
+import { ChatModule } from './chat/chat.module';
+// Módulo de GraphQL para APIs basadas en GraphQL
+import { GraphQLModule } from '@nestjs/graphql';
+// Driver de Apollo para GraphQL
+import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
+// Utilidad para manejar rutas de archivos
+import { join } from 'path';
+// 
+import { ExternalApisModule } from './external-apis/external-apis.module';
+//
+import { CacheModule } from '@nestjs/cache-manager';
+// Configuración de cache con Redis (comentado para evitar dependencia)
+// import { redisStore } from 'cache-manager-redis-yet';
 
 // Módulo raíz de la aplicación - punto de entrada principal
 @Module({
@@ -21,6 +37,13 @@ import { PostsModule } from './posts/posts.module';
     // Configuración global para variables de entorno
     ConfigModule.forRoot({
       isGlobal: true, // Hace que ConfigService esté disponible en toda la app sin importar
+    }),
+    // Configuración de GraphQL con Apollo
+    GraphQLModule.forRoot<ApolloDriverConfig>({
+      driver: ApolloDriver,
+      autoSchemaFile: join(process.cwd(), 'src/schema.gql'), // Ruta para generar el esquema GraphQL
+      playground: true, // Habilita la interfaz de playground para pruebas
+      introspection: true, // Permite introspección del esquema
     }),
     
     // Configuración de la conexión a la base de datos PostgreSQL
@@ -34,11 +57,19 @@ import { PostsModule } from './posts/posts.module';
       autoLoadEntities: true, // Carga automáticamente todas las entidades registradas
       synchronize: true       // Crea/actualiza tablas automáticamente (SOLO para desarrollo)
     }),
+
+    // Configuración de cache en memoria (para desarrollo)
+    CacheModule.register({
+      isGlobal: true,
+      ttl: 300, // 5 minutos por defecto
+    }),
     
     // Módulos de funcionalidad de la aplicación
     UsersModule,  // Gestión de usuarios
     AuthModule,   // Autenticación y autorización
-    PostsModule,  // Gestión de posts
+    PostsModule, // Gestión de posts
+    FilesModule, // Gestión de archivos
+    ChatModule, ExternalApisModule  // Funcionalidad de chat en tiempo real
     ],
   controllers: [AppController], // Controladores del módulo raíz
   providers: [AppService],      // Servicios del módulo raíz

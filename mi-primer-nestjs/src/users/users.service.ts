@@ -8,6 +8,7 @@ import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 // Librería para encriptar contraseñas de forma segura
 import * as bcrypt from 'bcrypt';
+import { CreateUserInput } from './dto/create-user.input';
 
 // Decorador que permite que esta clase sea inyectada en otros componentes
 @Injectable()
@@ -19,32 +20,32 @@ export class UsersService {
     ) {}
         
     // Método para obtener todos los usuarios de la base de datos
-    findAll() {
+    findAll(): Promise<User[]> {
         // Utiliza el método find() del repository para obtener todos los registros
         return this.userRepository.find();
     }
 
     // Método para obtener un usuario específico por su ID
-    findOne(id: number) {
+    findOne(id: number): Promise<User | null> {
         // Busca un usuario usando la cláusula WHERE con el ID proporcionado
         return this.userRepository.findOne({ where: { id }});
     }
 
     // Método para crear un nuevo usuario con contraseña encriptada
-    async createUser(user: any) {
+    async createUser(userData: CreateUserInput): Promise<User> {
         // Encripta la contraseña usando bcrypt con salt de 10 rondas
-        const hashedPassword = await bcrypt.hash(user.password, 10);
+        const hashedPassword = await bcrypt.hash(userData.password, 10);
         // Crea una nueva instancia de User con la contraseña encriptada
         const newUser = this.userRepository.create({
-            ...user, // Spread operator para copiar todas las propiedades
+            ...userData, // Spread operator para copiar todas las propiedades
             password: hashedPassword // Sobrescribe la contraseña con la versión encriptada
         })
         // Guarda el nuevo usuario en la base de datos
-        return this.userRepository.save(newUser);
+        return await this.userRepository.save(newUser) as User;
     }
 
     // Método para buscar un usuario por su email (usado en autenticación)
-    findByEmail(email: string) {
+    findByEmail(email: string): Promise<User | null> {
         // Busca un usuario usando el email como criterio de búsqueda
         return this.userRepository.findOne({ where: { email }})
     }

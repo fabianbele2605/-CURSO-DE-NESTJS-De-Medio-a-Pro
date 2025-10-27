@@ -8,6 +8,9 @@ import { UsersService } from './users.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 // Entidad User para operaciones de base de datos
 import { User } from './entities/user.entity';
+// Entidad USersResolver para 
+import { UsersResolver } from './users.resolver';
+
 
 // Módulo que encapsula toda la funcionalidad relacionada con usuarios
 @Module({
@@ -16,7 +19,7 @@ import { User } from './entities/user.entity';
     TypeOrmModule.forFeature([User])
   ],
   controllers: [UsersController], // Controladores que pertenecen a este módulo
-  providers: [UsersService],      // Servicios que pertenecen a este módulo
+  providers: [UsersService, UsersResolver],      // Servicios que pertenecen a este módulo
   exports: [UsersService]         // Servicios que otros módulos pueden importar y usar
 })
 export class UsersModule {}

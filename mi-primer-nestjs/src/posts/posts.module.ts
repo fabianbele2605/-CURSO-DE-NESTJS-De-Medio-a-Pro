@@ -8,6 +8,8 @@ import { PostsService } from './posts.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 // Entidad Post para operaciones de base de datos
 import { Post } from './entities/post.entity';
+//
+import { PostsResolver } from './posts.resolver';
 
 // Módulo que encapsula toda la funcionalidad relacionada con posts
 @Module({
@@ -16,6 +18,6 @@ import { Post } from './entities/post.entity';
     TypeOrmModule.forFeature([Post])
   ],
   controllers: [PostsController], // Controladores que pertenecen a este módulo
-  providers: [PostsService]       // Servicios que pertenecen a este módulo
+  providers: [PostsService, PostsResolver]       // Servicios que pertenecen a este módulo
 })
 export class PostsModule {}
